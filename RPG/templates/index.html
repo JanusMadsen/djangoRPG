@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to the Index Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 50px;
+        }
+        h1 {
+            font-size: 36px;
+            color: #333;
+        }
+        p {
+            font-size: 18px;
+            color: #666;
+        }
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #007BFF;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        footer {
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Your Profile Page</h1>
+        <p>This is the main index page of your site. From here, you can navigate to different sections, including updating your profile.</p>
+    </header>
+
+    <section>
+        <h2>Profile Management</h2>
+        <p>To update your personal information, please click the button below:</p>
+        <a href="{% url 'update_profile' %}" class="btn">Update Profile</a>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 YourWebsite. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
