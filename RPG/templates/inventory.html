@@ -4,65 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #333;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-        }
-        nav {
-            background-color: #555;
-            overflow: hidden;
-        }
-        nav a {
-            float: left;
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-        }
-        nav a:hover {
-            background-color: #111;
-        }
-        #content {
-            display: flex;
-            padding: 20px;
-        }
-        #sidebar {
-            width: 20%;
-            background-color: #ddd;
-            padding: 10px;
-        }
-        #main-area {
-            width: 75%;
-            padding: 10px;
-        }
-        h1 {
-            color: #333;
-        }
-        .stat-box {
-            background-color: #eee;
-            padding: 10px;
-            margin-bottom: 10px;
-        }
-        footer {
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 10px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-    </style>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
 
@@ -75,7 +18,7 @@
         <a href="{% url 'inventory' %}">Inventory</a>
         <a href="#">Quests</a>
         <a href="#">Battle</a>
-        <a href="#">Shop</a>
+        <a href="{% url 'shop' %}">Shop</a>
         <a href="{% url 'logout' %}">Logout</a>
     </nav>
 

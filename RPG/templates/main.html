@@ -19,19 +19,18 @@
     <a href="{% url 'inventory' %}">Inventory</a>
     <a href="#">Quests</a>
     <a href="#">Battle</a>
-    <a href="#">Shop</a>
+    <a href="{% url 'shop' %}">Shop</a>
     <a href="{% url 'logout' %}">Logout</a>
 </nav>
 
 <div id="content">
     <!-- Sidebar with character profile -->
     <div id="sidebar">
-        <h3>Your Character</h3>
+        <h3>Your Character: {{ player_model.name }}</h3>
         <div class="stat-box">
-            <p><strong>Strength:</strong> {{ player_model.strength }}</p>
-            <p><strong>Climbing:</strong> {{ player_model.climbing }}</p>
-            <p><strong>HP:</strong> {{ player_model.hp }}</p>
-            <p><strong>Jump:</strong> {{ player_model.jump }}</p>
+            <p><strong>AC:</strong> {{ player_model.AC }}</p>
+            <p><strong>Strength:</strong> {{ player_model.Strength }}</p>
+            <p><strong>HP:</strong> {{ player_model.HP }}</p>
         </div>
     </div>
 

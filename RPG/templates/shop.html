@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Shop</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>RPG Game - Welcome, {{ user.username }}!</h1>
+    </header>
+    
+    <nav>
+        <a href="{% url 'main' %}">Home</a>
+        <a href="{% url 'update_profile' %}">Profile</a>
+        <a href="{% url 'inventory' %}">Inventory</a>
+        <a href="#">Quests</a>
+        <a href="#">Battle</a>
+        <a href="{% url 'shop' %}">Shop</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+    <h1>Shop</h1>
+    <h2>Player coins: {{ player.coins }}</h2>
+    <!-- Section for buying items (items not in inventory) -->
+    <h2>Items to Buy</h2>
+    {% if items_to_buy %}
+        {% for item in items_to_buy %}
+            <div class="item">
+                <h3>{{ item.name }}</h3>
+                <p>Class: {{ item.item_type }}</p>
+                <p>Price: {{ item.price }} coins</p>
+                <form method="POST" action="{% url 'purchase_item' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Purchase</button>
+                </form>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No items available for purchase.</p>
+    {% endif %}
+
+    <!-- Section for selling items (items in inventory) -->
+    <h2>Items to Sell</h2>
+    {% if items_to_sell %}
+        {% for item in items_to_sell %}
+            <div class="item">
+                <h3>{{ item.name }}</h3>
+                <p>{{ item.description }}</p>
+                <p>Sell Price: {{ item.sell_price }} coins</p>
+                <form method="POST" action="{% url 'sell_item' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Sell</button>
+                </form>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No items available for sale.</p>
+    {% endif %}
+
+</body>
+</html>

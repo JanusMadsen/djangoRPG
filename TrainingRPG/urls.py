@@ -28,4 +28,7 @@ urlpatterns = [
     path('main/', views.main_page, name='main'),  # Main RPG page
     path('logout/', views.logoutpage, name='logout'),  # Logout
     path('inventory/', views.inventory_view, name='inventory'),
+    path('shop/', views.shop, name='shop'),
+    path('purchase/<int:item_id>/', views.purchase_item, name='purchase_item'),
+    path('sell/<int:item_id>/', views.sell_item, name='sell_item'),
 ]
