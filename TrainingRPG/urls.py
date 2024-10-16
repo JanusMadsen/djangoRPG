@@ -27,4 +27,5 @@ urlpatterns = [
     path('update_profile/', views.update_profile, name='update_profile'),  # Update profile page
     path('main/', views.main_page, name='main'),  # Main RPG page
     path('logout/', views.logoutpage, name='logout'),  # Logout
+    path('inventory/', views.inventory_view, name='inventory'),
 ]

@@ -1,9 +1,9 @@
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordChangeForm, PasswordResetForm
-from .models import player_model
+from .models import player_model, Item, Inventory
 from .forms import ProfileForm, RegistrationForm
 
 def index(request):
@@ -47,11 +47,46 @@ def update_profile(request):
         form = ProfileForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
-            return redirect('index')  # Redirect to a success page or the profile page
+            return redirect('main')  # Redirect to a success page or the profile page
     else:
         form = ProfileForm(instance=profile)
 
     return render(request, 'update_profile.html', {'form': form})
+
+@login_required
+def inventory_view(request):
+    character = get_object_or_404(player_model, user=request.user)
+
+ # Check if the inventory exists, if not create it
+    inventory, created = Inventory.objects.get_or_create(player=character)
+
+    if request.method == 'POST':
+        item_id = request.POST.get('item_id')
+        action = request.POST.get('action')
+        item = get_object_or_404(Item, id=item_id)
+
+        print(f"Trying to equip item: {item.name} (ID: {item.id}, Type: {item.item_type})")
+
+        # Equip or unequip the item
+        if action == 'equip':
+            if item.is_armor():
+                character.equipped_armor = item
+            elif item.is_weapon():
+                character.equipped_weapon = item
+            character.save()
+
+        elif action == 'unequip':
+            if item.is_armor() and character.equipped_armor == item:
+                character.equipped_armor = None
+            elif item.is_weapon() and character.equipped_weapon == item:
+                character.equipped_weapon = None
+            character.save()
+
+        return redirect('inventory')
+
+    return render(request, 'inventory.html', {'inventory': character.inventory, 'character': character})
+
+
 
 def signuppage(request):
     if request.method == 'POST':

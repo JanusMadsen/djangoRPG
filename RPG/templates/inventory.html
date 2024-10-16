@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        nav {
+            background-color: #555;
+            overflow: hidden;
+        }
+        nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+        }
+        nav a:hover {
+            background-color: #111;
+        }
+        #content {
+            display: flex;
+            padding: 20px;
+        }
+        #sidebar {
+            width: 20%;
+            background-color: #ddd;
+            padding: 10px;
+        }
+        #main-area {
+            width: 75%;
+            padding: 10px;
+        }
+        h1 {
+            color: #333;
+        }
+        .stat-box {
+            background-color: #eee;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>RPG Game - Inventory</h1>
+    </header>
+    <nav>
+        <a href="{% url 'main' %}">Home</a>
+        <a href="{% url 'update_profile' %}">Profile</a>
+        <a href="{% url 'inventory' %}">Inventory</a>
+        <a href="#">Quests</a>
+        <a href="#">Battle</a>
+        <a href="#">Shop</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+
+    <h1>{{ character.user.username }}'s Inventory</h1>
+
+    <h3>Equipped Armor: {{ character.equipped_armor }}</h3>
+    <h3>Equipped Weapon: {{ character.equipped_weapon }}</h3>
+
+    <h2>Your Items:</h2>
+    <ul>
+        {% for item in inventory.items.all %}
+        <li class="item">
+            {{ item.name }} - {{ item.item_type }}
+            {% if item == character.equipped_armor or item == character.equipped_weapon %}
+                <span class="equipped"> (Equipped)</span>
+                <form method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                    <input type="hidden" name="action" value="unequip">
+                    <button type="submit">Unequip</button>
+                </form>
+            {% else %}
+                <form method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                    <input type="hidden" name="action" value="equip">
+                    <button type="submit">Equip</button>
+                </form>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>    
+</body>
+</html>
