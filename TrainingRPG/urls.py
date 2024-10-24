@@ -31,4 +31,6 @@ urlpatterns = [
     path('shop/', views.shop, name='shop'),
     path('purchase/<int:item_id>/', views.purchase_item, name='purchase_item'),
     path('sell/<int:item_id>/', views.sell_item, name='sell_item'),
+    path('battle/start/', views.start_battle, name='start_battle'),
+    path('battle/', views.battle_simulator, name='battle'),  # Assuming you create a battle_simulator view
 ]

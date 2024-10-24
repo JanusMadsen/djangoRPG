@@ -6,7 +6,7 @@ from .models import player_model
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = player_model
-        fields = ['name', 'Weight', 'Strength']  # List of fields that users can update
+        fields = ['name', 'Strength', 'HP']  # List of fields that users can update
 
 
 class RegistrationForm(UserCreationForm):

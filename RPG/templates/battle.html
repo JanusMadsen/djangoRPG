@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Battle</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <h1>RPG Game - Welcome, {{ user.username }}!</h1>
+    </header>
+    
+    <nav>
+        <a href="{% url 'main' %}">Home</a>
+        <a href="{% url 'update_profile' %}">Profile</a>
+        <a href="{% url 'inventory' %}">Inventory</a>
+        <a href="#">Quests</a>
+        <a href="{% url 'battle' %}">Battle</a>
+        <a href="{% url 'shop' %}">Shop</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+
+    <h1>Battle Simulator</h1>
+
+    <!-- Battle Status -->
+    <div class="battle-status">
+        <h2>Player: {{ player.name }}</h2>
+        <p>HP: {{ player_hp }}</p>
+        <h2>Monster: {{ monster.name }}</h2>
+        <p>HP: {{ monster_hp }}</p>
+    </div>
+
+    <!-- Player's Attack Box -->
+    <div class="battle-container">
+        <!-- Player's Attack Box -->
+        <div class="attack-box">
+            <h3>Your Attack</h3>
+            <p><strong>Dice Roll:</strong> {{ player_diceroll }}</p>
+            <p><strong>Damage Dealt:</strong> {{ player_damage }} to {{ monster.name }}</p>
+        </div>
+    
+        <!-- Goblin's Attack Box -->
+        <div class="damage-box">
+            <h3>Goblin's Attack</h3>
+            <p><strong>Goblin Dice Roll:</strong> {{ monster_diceroll }}</p>
+            <p><strong>Damage Taken:</strong> {{ monster_damage }} dealt to you</p>
+        </div>
+    </div>
+
+    <!-- Battle Messages -->
+    <div class="battle-messages">
+        <p>{{ message }}</p>
+    </div>
+
+    <!-- Battle Actions -->
+    <div class="battle-actions">
+        {% if player_turn %}
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" name="action" value="attack">Attack</button>
+        </form>
+        {% endif %}
+    </div>
+
+</body>
+</html>

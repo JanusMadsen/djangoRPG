@@ -149,3 +149,25 @@ button:hover {
     color: #333;
     text-decoration: underline;
 }
+
+.attack-box, .damage-box {
+    background-color: #f8f9fa;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    width: 45%; /* Adjusts the width to ensure side-by-side display */
+    margin: 10px;
+    display: inline-block;
+    vertical-align: top;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.battle-messages {
+    clear: both; /* Ensures messages appear below the boxes */
+    margin-top: 20px;
+}
+
+.battle-actions {
+    margin-top: 20px;
+    text-align: center;
+}

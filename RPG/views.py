@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordChangeForm, PasswordResetForm
-from .models import player_model, Item, Inventory
+from .models import player_model, Item, Inventory, goblin
 from .forms import ProfileForm, RegistrationForm
 
 def index(request):
@@ -157,3 +157,89 @@ def signuppage(request):
     else:
         form = RegistrationForm()
     return render(request, "signup.html", {"form": form})
+
+def start_battle(request):
+    player = player_model.objects.get(user=request.user)  # Get the player's character
+    monster = goblin.objects.order_by('?').first()  # Randomly select a monster for the fight
+
+    # Initialize the battle state in the session
+    request.session['battle'] = {
+        'player_id': player.id,
+        'monster_id': monster.id,
+        'player_hp': player.HP,
+        'monster_hp': monster.HP,
+        'monster_name': monster.name,
+        'player_turn': True  # Player always starts first
+    }
+
+    return redirect('battle')  # Redirect to the battle page
+
+def battle_simulator(request):
+    # Retrieve battle info from the session
+    battle_state = request.session.get('battle')
+    if not battle_state:
+        return redirect('start_battle')  # No battle in session, start a new one
+
+    player = get_object_or_404(player_model, pk=battle_state['player_id'])
+    monster = get_object_or_404(goblin, pk=battle_state['monster_id'])
+
+    # Initial setup for variables
+    player_diceroll = None
+    player_damage = None
+    monster_diceroll = None
+    monster_damage = None
+    message = ""
+
+    # Ensure player HP and monster HP are initialized in battle_state
+    if 'player_hp' not in battle_state:
+        battle_state['player_hp'] = player.HP
+    if 'monster_hp' not in battle_state:
+        battle_state['monster_hp'] = monster.HP
+
+    if request.method == "POST":
+        action = request.POST.get('action')
+
+        # Player's attack turn
+        if action == "attack" and battle_state['player_turn']:
+            player_damage, player_diceroll = player.attack(monster)
+            battle_state['monster_hp'] -= player_damage
+            message = f"You dealt {player_damage} damage to {monster.name}!"
+
+            # Check if the monster is defeated
+            if battle_state['monster_hp'] <= 0:
+                message += f" You defeated {monster.name}!"
+                battle_state['player_turn'] = False  # End the player's turn
+                del request.session['battle']  # End the battle      
+            else:
+                battle_state['player_turn'] = False  # Monster's turn
+
+        # Monster's attack turn
+        if not battle_state['player_turn'] and 'monster_hp' in battle_state and battle_state['monster_hp'] > 0:
+            monster_damage, monster_diceroll = monster.attack(player)
+            battle_state['player_hp'] -= monster_damage
+            message += f" {monster.name} dealt {monster_damage} damage to you! {monster_diceroll}"
+
+            # Check if the player is defeated
+            if battle_state['player_hp'] <= 0:
+                message += " You were defeated!"
+                del request.session['battle']  # End the battle
+            else:
+                battle_state['player_turn'] = True  # Player's turn again
+
+        # Update the session with the new state
+        request.session['battle'] = battle_state
+
+    context = {
+        'player': player,
+        'monster': monster,
+        'player_hp': battle_state['player_hp'],  # Use the HP stored in the session
+        'monster_hp': battle_state['monster_hp'],  # Use the HP stored in the session
+        'player_diceroll': player_diceroll,
+        'player_damage': player_damage,
+        'monster_diceroll': monster_diceroll,
+        'monster_damage': monster_damage,
+        'message': message,
+        'player_turn': battle_state['player_turn']  # Use the player's turn status from the session
+    }
+
+    return render(request, "battle.html", context)
