@@ -16,8 +16,7 @@
         <a href="{% url 'main' %}">Home</a>
         <a href="{% url 'update_profile' %}">Profile</a>
         <a href="{% url 'inventory' %}">Inventory</a>
-        <a href="#">Quests</a>
-        <a href="{% url 'battle' %}">Battle</a>
+        <a href="{% url 'start_battle' %}">Battle</a>
         <a href="{% url 'shop' %}">Shop</a>
         <a href="{% url 'logout' %}">Logout</a>
     </nav>
@@ -48,8 +47,10 @@
         {% for item in items_to_sell %}
             <div class="item">
                 <h3>{{ item.name }}</h3>
-                <p>{{ item.description }}</p>
+                <p>Class: {{ item.item_type }}</p>
                 <p>Sell Price: {{ item.sell_price }} coins</p>
+                <p>{% if item.defense %}Defense: {{ item.defense }}{% endif %}</p>
+                <p>{% if item.damage %}Damage: {{ item.damage }}{% endif %}</p>   
                 <form method="POST" action="{% url 'sell_item' item.id %}">
                     {% csrf_token %}
                     <button type="submit">Sell</button>

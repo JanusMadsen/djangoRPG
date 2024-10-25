@@ -188,6 +188,8 @@ def battle_simulator(request):
     player_damage = None
     monster_diceroll = None
     monster_damage = None
+    player_AC = player.get_total_ac()
+    monster_AC = monster.AC
     message = ""
 
     # Ensure player HP and monster HP are initialized in battle_state
@@ -217,7 +219,7 @@ def battle_simulator(request):
         if not battle_state['player_turn'] and 'monster_hp' in battle_state and battle_state['monster_hp'] > 0:
             monster_damage, monster_diceroll = monster.attack(player)
             battle_state['player_hp'] -= monster_damage
-            message += f" {monster.name} dealt {monster_damage} damage to you! {monster_diceroll}"
+            message += f" {monster.name} dealt {monster_damage} damage to you!"
 
             # Check if the player is defeated
             if battle_state['player_hp'] <= 0:
@@ -238,6 +240,8 @@ def battle_simulator(request):
         'player_damage': player_damage,
         'monster_diceroll': monster_diceroll,
         'monster_damage': monster_damage,
+        'player_AC': player_AC,
+        'monster_AC': monster_AC,
         'message': message,
         'player_turn': battle_state['player_turn']  # Use the player's turn status from the session
     }
